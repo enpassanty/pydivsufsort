@@ -19,5 +19,6 @@ __all__ = [
     "lcp_query",
     "levenshtein",
     "most_frequent_substrings",
+    "nonoverlapping_substrings",
     "WonderString",
 ]
