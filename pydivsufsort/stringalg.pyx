@@ -280,3 +280,70 @@ def most_frequent_substrings(
         cnt[i] = count[i].first
 
     return pos, cnt
+
+def nonoverlapping_substrings(
+
+    np.ndarray[sa_t, ndim=1] sa not None,
+    np.ndarray[sa_t, ndim=1] lcp not None,
+    sa_t length,
+    sa_t limit = 0,
+    sa_t minimum_count = 1
+    ):
+    """
+    Parameters
+    ----------
+
+    sa: np.ndarray
+        Suffix array
+    lcp : np.ndarray
+        LCP array
+    length : int
+        length of the substrings to compare
+    limit : int (default 0)
+        number of substrings to extract, 0 for all of them
+    minimum_count : int (default 1)
+        ignore the substrings that occur less than `minimum_count` times
+    
+
+    Returns
+    -------
+    positions : np.ndarray
+        position in the suffix array
+    counts : np.ndarray
+        number of occurrences, decreasing
+    """
+
+    cdef sa_t n, i, cur, cur_count, last    
+    cdef vector[pair[sa_t, sa_t]] count
+    
+    if minimum_count < 1:
+        minimum_count = 1
+
+    n = len(lcp)
+    cur = 0
+    cur_count = 1
+    for i in range(n-1):
+        if lcp[i] >= length:
+            cur_count += 1
+        else:
+            if cur_count >= minimum_count:
+                count.push_back(pair[sa_t, sa_t](cur_count, cur))
+            cur = i + 1
+            cur_count = 1
+    if cur_count >= minimum_count:
+        count.push_back(pair[sa_t, sa_t](cur_count, cur))
+
+    sort(count.begin(), count.end())
+    reverse(count.begin(), count.end())
+    if limit and limit < count.size():
+        count.resize(limit)
+    
+    n = count.size()
+    cdef np.ndarray[sa_t, ndim=1] pos = np.empty(n, dtype=lcp.dtype) 
+    cdef np.ndarray[sa_t, ndim=1] cnt = np.empty(n, dtype=lcp.dtype) 
+
+    for i in range(n):
+        pos[i] = count[i].second
+        cnt[i] = count[i].first
+
+    return pos, cnt
