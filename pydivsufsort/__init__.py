@@ -5,6 +5,7 @@ from .stringalg import (
     lcp_query,
     levenshtein,
     most_frequent_substrings,
+    nonoverlapping_substrings
 )
 from .wonderstring import WonderString
 
