@@ -323,7 +323,7 @@ def nonoverlapping_substrings(
     cur = 0
     cur_count = 1
     for i in range(1,n):
-        if lcp[i] >= length and abs(sa[i]-sa[i-1]) > lcp[i-1]:
+        if lcp[i-1] >= length and abs(sa[i]-sa[i-1]) > lcp[i-1]:
             cur_count += 1
         else:
             if cur_count >= minimum_count:
